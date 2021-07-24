@@ -12,10 +12,10 @@ execute_process(COMMAND lsb_release -cs
 )
 
 SET(COMPILE_ELLIPSOID_PLANNER_NODE TRUE)
-if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic")
-  SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
-  message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
-endif()
+# if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic")
+#   SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
+#   message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
+# endif()
 #message("-- COMPILE_ELLIPSOID_PLANNER_NODE: ${COMPILE_ELLIPSOID_PLANNER_NODE}")
 
 find_package(catkin_simple REQUIRED)

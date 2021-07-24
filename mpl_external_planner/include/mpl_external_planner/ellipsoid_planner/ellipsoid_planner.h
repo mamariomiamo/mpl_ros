@@ -14,7 +14,7 @@ namespace MPL {
 /**
  * @brief Motion primitive planner using point cloud
  */
-class EllipsoidPlanner : public PlannerBase<3, Waypoint3D> {
+class EllipsoidPlanner : public PlannerBase<3, Waypoint3D> { //inherit functions from PlannerBase as EllipsoidPlanner is its sub-class
  public:
   /**
    * @brief Simple constructor
@@ -24,7 +24,7 @@ class EllipsoidPlanner : public PlannerBase<3, Waypoint3D> {
     planner_verbose_ = verbose;
     if (planner_verbose_)
       printf(ANSI_COLOR_CYAN
-             "[EllipsoidPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+             "[EllipsoidPlanner] from ellipsoid_planner.h PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
   }
   /// Set map util
   void setMap(const vec_Vec3f &obs, decimal_t r, const Vec3f &ori,

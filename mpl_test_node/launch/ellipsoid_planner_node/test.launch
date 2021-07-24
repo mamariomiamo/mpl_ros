@@ -1,6 +1,8 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="dt" default="0.2"/>
+  <!--dt for each primitive-->
+  <arg name="dt" default="0.2"/> 
+  <!--maximum allowed expansion, -1 means no limit-->
   <arg name="max_num" default="-1"/>
   <!--<arg name="debug_valgrind" default="false"/>-->
 
@@ -13,6 +15,7 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <remap from="~pose" to="/move_base_simple/goal"/>
+    <!-- use which point cloud file -->
     <param name="file" value="$(find mpl_test_node)/maps/office/office.bag"/>
     <param name="topic" value="/cloud"/>
     <!-- Set start and goal -->
@@ -43,7 +46,9 @@
     <param name="use_prior" value="false"/>
     <param name="use_acc" value="true"/>
     <param name="use_jrk" value="false"/>
+    <!-- num denotes control input discretization -->
     <param name="num" value="2"/>
+    <!--w is time weight for each primitive-->
     <param name="w" value="10000"/>
     <param name="epsilon" value="2"/>
     <param name="max_num" value="$(arg max_num)"/>
