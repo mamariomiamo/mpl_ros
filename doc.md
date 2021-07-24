@@ -1,4 +1,4 @@
-## Files used:
+## When running the ellipsoid_planner, following files are used:
 
 ### mpl_test_node/launch/ellipsoid_planner_node/test.launch
 - launch file that sets system parameters and start the ROS node **ellipsoid_planner_node**
