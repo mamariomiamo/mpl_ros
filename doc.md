@@ -53,7 +53,9 @@
 - Methods:
     * `get_succ(...)`
         * For every control input in `U`:
-            * 3D primitive is constructed from an initial state (p,v) and an input control (u)
+            * 3D primitive is constructed from an initial state (p,v) and an input control (u) `Primitive3D pr(curr, U_[i], dt_);` ([details](https://github.com/mamariomiamo/motion_primitive_library/blob/master/include/mpl_basis/primitive.h#L213-L256))
+                * Call `Primitive1D` for each axis
+                * Argument size (`Vecxf`) passed into Primitive1D depends on the Control Flag (control snp, jrk, acc etc.)
             * Waypoint at time dt_ is evaluated and will be set as successor if pass the following checks
             * Skip the primitive if:
                 * still ends in the current node, 
@@ -126,4 +128,10 @@
     * **`StateSpace`**
         * State space consists of all the open set states that are stored in priority queue, a hashmap that stores all the nodes
 
-
+### motion_primitive_library/include/mpl_basis/primitive.h
+* `Primitive1D` 
+    * It has a public attribute: **coefficients vector** `Vec6f c{Vec6f::Zero()};`.
+    * The constructor called depends on arguments
+        * For the one called in ellipsoid planner: since we control accleration, first arguement into the constructor has type `Vec2f` thus `Primitive1D(Vec2f state, decimal_t u) { c << 0, 0, 0, u, state(1), state(0); }` is called.
+* `decimal_t J(...)` control efforts
+    * According to control flag, use the **coefficients vector** to compute the control effort as integration of square of vel/acc/jerk/snap.
