@@ -60,6 +60,7 @@ class EllipsoidUtil {
 
   /// Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
   bool isFree(const Primitive3D &pr) {
+    // Check if outside polyhedron bounding box
     vec_E<Waypoint3D> ps = pr.sample(2);
     for (const auto &it : ps) {
       if (!bbox_.inside(it.pos)) return false;
@@ -75,7 +76,7 @@ class EllipsoidUtil {
       std::vector<int> pointIdxRadiusSearch;
       std::vector<float> pointRadiusSquaredDistance;
 
-      searchPoint.x = E.d()(0);
+      searchPoint.x = E.d()(0); //.d() returns the centre of the ellipsoid
       searchPoint.y = E.d()(1);
       searchPoint.z = E.d()(2);
 

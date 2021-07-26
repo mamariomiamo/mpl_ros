@@ -54,10 +54,36 @@
     * `get_succ(...)`
         * For every control input in `U`:
             * 3D primitive is constructed from an initial state (p,v) and an input control (u)
+            * Waypoint at time dt_ is evaluated and will be set as successor if pass the following checks
+            * Skip the primitive if:
+                * still ends in the current node, 
+                * Check if vel limit is within range
+                * Check if the primitive is free. `map_util_->isFree(pr)` (use [`ellipsoid_util.h`](doc.md#mpl_external_plannerincludempl_external_plannerellipsoid_plannerellipsoid_utilh))
+            * Update the successor node's coordniates, cost and action index
 
 ### motion_primitive_library/include/mpl_planner/common/env_base.h
 
 ### mpl_external_planner/include/mpl_external_planner/ellipsoid_planner/ellipsoid_util.h
+- Methods:
+    * `isFree()`: Check if a primitive is inside the SFC from t:0 to dt
+        * Check if sampled waypoints along the primitive is outside bounding box
+            * Use `sample(int N)` from [`primitive.h`](doc.md#motion_primitive_libraryincludempl_basisprimitiveh) to sample N+1 waypoints along the primitive and check if the sampled points are outside the polyhedron bounding box.
+        * Check if sampled ellipsoids intersect with obstacle point cloud
+            * `sample_ellipsoids(...)` from [`primitive_ellipsoid_utils.h`] to sample N ellipsoids along the trajectory.
+            * For each sampled ellipsoid:
+                * `radiusSearch(...)`:
+                    * If cannot find any neighbor (obstacle point) in radius, return true for `isFree()`
+                    * If finds more than one neighbor in radius (r of ellpsoid), then check for all found neighbors by calling `inside(.)` from [`ellipsoid.h`]
+
+### mpl_external_planner/include/mpl_external_planner/ellipsoid_planner/primitive_ellipsoid_utils.h
+- Methods
+    * `sample_ellipsoids(pr, axe, N)`
+    * `generate_ellipsoid(axe, pos, acc)`: follows "Aggresive Flt in SE(3)" paper Eqn (17). Return `Ellipsoid3D(C, ellipsoid_center)` as defined in [`ellipsoid.h`].
+
+### DecompROS/DecompUtil/include/decomp_geometry/ellipsoid.h
+- Methods
+    * `inside(.)`: Check if dist(.)\leq 1
+    * `dist(.)`: "Aggresive Flt in SE(3)" paper Eqn (18)
 
 ### motion_primitive_library/include/mpl_planner/common/graph_search.h
 - Graph Search class that implements A* and Lifelong Planning A* algorithms
@@ -80,6 +106,14 @@
     ```
     * Initialize start node in first iteration.
     * Pop from priority queue `pq_` and expand/get successors with `ENV->get_succ(...)` in [`env_cloud`](doc.md#mpl_external_plannerincludempl_external_plannerellipsoid_plannerenv_cloudh)
+
+### motion_primitive_library/include/mpl_basis/primitive.h
+- Methods
+    * `Waypoint<Dim> evaluate(decimal_t t)`: returns waypoint at time t.
+    * `sample(N)`: sample N+1 waypoints
+
+
+
 
 
 ### motion_primitive_library/include/mpl_planner/common/state_space.h
